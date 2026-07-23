@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&height=260&color=0:0d1117,50:6d28d9,100:f59e0b&text=SPENCER%20SCOTT&fontSize=58&fontColor=ffffff&animation=fadeIn&fontAlignY=36&desc=Mobile%20Developer%20%E2%80%A2%20Flutter%20%E2%80%A2%20On-Device%20AI&descAlignY=54&descSize=19" width="100%" alt="Spencer Scott"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&height=260&color=0:0d1117,50:6d28d9,100:f59e0b&text=SPENCER%20SCOTT&fontSize=58&fontColor=ffffff&animation=fadeIn&fontAlignY=36&desc=Full-Stack%20%26%20Mobile%20Developer&descAlignY=54&descSize=19" width="100%" alt="Spencer Scott"/>
 
 <br/>
 
@@ -18,12 +18,12 @@
 <a name="about-me"></a>
 ## 🧭 About Me
 
-I'm a mobile developer who believes the best software gets out of the way. My focus is **Flutter** — building fast, fluid, cross-platform apps — and I'm especially drawn to what happens when intelligence moves onto the device itself: no server round-trip, no compromise on privacy, just software that responds the instant you touch it, signal or no signal.
+I'm a developer who works across the stack, **React** and **TypeScript** on the front end, **Flutter** for mobile, **Java** and **Python** for backend logic, and **SQL** underneath it all. I'm especially drawn to what happens when intelligence moves onto the device itself: no server round-trip, no compromise on privacy, just software that responds the instant you touch it, signal or no signal.
 
 ```yaml
 identity:
   name: "Spencer Scott"
-  role: "Mobile Developer"
+  role: "Full-Stack & Mobile Developer"
   specialty: ["Flutter", "On-Device AI", "Offline-First Design"]
   currently_building: "An AI-powered recipe app that works fully offline"
   philosophy: "Ship fast. Respect privacy. Sweat the details."
@@ -40,7 +40,7 @@ identity:
 
 | 📱 Mobile-First | 🧠 On-Device AI | 🏗️ Built to Last |
 |:---:|:---:|:---:|
-| One codebase, a native feel everywhere — Flutter done right. | Models that run locally: private, fast, and offline by default. | Clean, maintainable architecture over quick hacks. |
+| One codebase, a native feel everywhere, Flutter done right. | Models that run locally: private, fast, and offline by default. | Clean, maintainable architecture over quick hacks. |
 
 </div>
 
@@ -50,11 +50,24 @@ identity:
 ## 🧰 Tech Arsenal
 
 <details open>
-<summary><b>📱 Languages & Mobile</b></summary>
+<summary><b>💻 Languages</b></summary>
 <br/>
 
-![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logoColor=white)
+
+</details>
+
+<details open>
+<summary><b>⚛️ Frameworks & Platforms</b></summary>
+<br/>
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=apple&logoColor=white)
 
@@ -96,7 +109,7 @@ identity:
 <a name="featured-project"></a>
 ## 📸 Featured Project — Ingredient-to-Recipe App
 
-An offline-first Flutter app that looks at a photo of your ingredients and instantly suggests recipes — fully on-device, no internet required.
+An offline-first Flutter app that looks at a photo of your ingredients and instantly suggests recipes, fully on-device, no internet required.
 
 <div align="center">
 
