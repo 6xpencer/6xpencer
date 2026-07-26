@@ -1,7 +1,7 @@
 <a name="top"></a>
 
 <div align="center">
-  <img src="assets/header.png" width="100%" alt="Spencer Scott — Full-Stack & Mobile Developer"/>
+  <img src="assets/header.gif" width="100%" alt="Spencer Scott — Full-Stack & Mobile Developer"/>
 </div>
 
 <div align="center">
