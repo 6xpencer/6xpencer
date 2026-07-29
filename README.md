@@ -351,71 +351,111 @@ timeline
 
 ## ðŸ“Š GitHub Analytics
 
+Every panel below is generated live at page load. Nothing here is a screenshot, and nothing needs a workflow to keep it current.
+
 <div align="center">
+
+### Profile Summary
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=spencerscott&theme=github_dark" width="100%" alt="Profile summary: commits, stars, repositories, contributions" />
+
+</div>
+
+<br/>
+
+<div align="center">
+
+### Volume & Rank
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=spencerscott&show_icons=true&hide_border=true&rank_icon=github&include_all_commits=true&count_private=true&bg_color=0d1117&title_color=a78bfa&icon_color=fbbf24&text_color=e6edf3&cache_seconds=21600" />
   <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api?username=spencerscott&show_icons=true&hide_border=true&rank_icon=github&include_all_commits=true&count_private=true&bg_color=ffffff&title_color=6d28d9&icon_color=b45309&text_color=1c1b22&cache_seconds=21600" />
-  <img height="170em" src="https://github-readme-stats.vercel.app/api?username=spencerscott&show_icons=true&hide_border=true&rank_icon=github&bg_color=0d1117&title_color=a78bfa&icon_color=fbbf24&text_color=e6edf3" alt="GitHub statistics" />
+  <img height="170em" src="https://github-readme-stats.vercel.app/api?username=spencerscott&show_icons=true&hide_border=true&rank_icon=github&bg_color=0d1117&title_color=a78bfa&icon_color=fbbf24&text_color=e6edf3" alt="Commit, PR, issue and star totals with contribution rank" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=spencerscott&layout=compact&langs_count=8&hide_border=true&bg_color=0d1117&title_color=a78bfa&text_color=e6edf3&cache_seconds=21600" />
-  <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=spencerscott&layout=compact&langs_count=8&hide_border=true&bg_color=ffffff&title_color=6d28d9&text_color=1c1b22&cache_seconds=21600" />
-  <img height="170em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=spencerscott&layout=compact&langs_count=8&hide_border=true&bg_color=0d1117&title_color=a78bfa&text_color=e6edf3" alt="Most used languages" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=spencerscott&hide_border=true&background=0D1117&ring=A78BFA&fire=F59E0B&currStreakLabel=E6EDF3&sideLabels=A78BFA&dates=8B949E&stroke=21262D" />
+  <source media="(prefers-color-scheme: light)" srcset="https://streak-stats.demolab.com?user=spencerscott&hide_border=true&background=FFFFFF&ring=6D28D9&fire=B45309&currStreakLabel=1C1B22&sideLabels=6D28D9&dates=6B7280&stroke=E5E1EA" />
+  <img height="170em" src="https://streak-stats.demolab.com?user=spencerscott&hide_border=true&background=0D1117&ring=A78BFA&fire=F59E0B&currStreakLabel=E6EDF3" alt="Total contributions, current streak, longest streak" />
 </picture>
 
-<br/><br/>
+</div>
 
-<!-- streak-stats.demolab.com is the maintained host. The old herokuapp.com domain is dead. -->
-<a href="https://github.com/spencerscott">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=spencerscott&hide_border=true&background=0D1117&ring=A78BFA&fire=F59E0B&currStreakLabel=E6EDF3&sideLabels=A78BFA&dates=8B949E&stroke=21262D" />
-    <source media="(prefers-color-scheme: light)" srcset="https://streak-stats.demolab.com?user=spencerscott&hide_border=true&background=FFFFFF&ring=6D28D9&fire=B45309&currStreakLabel=1C1B22&sideLabels=6D28D9&dates=6B7280&stroke=E5E1EA" />
-    <img src="https://streak-stats.demolab.com?user=spencerscott&hide_border=true&background=0D1117&ring=A78BFA&fire=F59E0B&currStreakLabel=E6EDF3" alt="Contribution streak" />
-  </picture>
+<br/>
+
+<div align="center">
+
+### Language Distribution
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=spencerscott&theme=github_dark" height="230em" alt="Repositories per language" />
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=spencerscott&theme=github_dark" height="230em" alt="Most committed language" />
+
+<sub>Repository count shows breadth. Commit share shows where the work actually goes. They rarely agree, and the gap is the honest signal.</sub>
+
+</div>
+
+<br/>
+
+<div align="center">
+
+### Commit Cadence
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=spencerscott&theme=github_dark" height="230em" alt="Commit statistics by day" />
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=spencerscott&theme=github_dark&utcOffset=8" height="230em" alt="Most productive time of day" />
+
+</div>
+
+<br/>
+
+<div align="center">
+
+### Contribution Trend
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-activity-graph.vercel.app/graph?username=spencerscott&hide_border=true&bg_color=0d1117&color=fbbf24&line=a78bfa&point=ffffff&area=true&area_color=6d28d9&days=180" />
+  <source media="(prefers-color-scheme: light)" srcset="https://github-readme-activity-graph.vercel.app/graph?username=spencerscott&hide_border=true&bg_color=ffffff&color=b45309&line=6d28d9&point=1c1b22&area=true&area_color=a78bfa&days=180" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=spencerscott&hide_border=true&bg_color=0d1117&color=fbbf24&line=a78bfa&point=ffffff&area=true&days=180" width="100%" alt="Daily contribution volume over the last 180 days" />
+</picture>
+
+<sub>Last 180 days. The flat stretches are usually deep work on one branch, not time off.</sub>
+
+</div>
+
+<br/>
+
+<div align="center">
+
+### Repository Signal
+
+<a href="https://github.com/spencerscott/ingredient-to-recipe">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=spencerscott&repo=ingredient-to-recipe&hide_border=true&bg_color=0d1117&title_color=a78bfa&icon_color=fbbf24&text_color=e6edf3" alt="Ingredient-to-Recipe repository" />
+</a>
+<a href="https://github.com/spencerscott/sync-engine">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=spencerscott&repo=sync-engine&hide_border=true&bg_color=0d1117&title_color=a78bfa&icon_color=fbbf24&text_color=e6edf3" alt="Sync Engine repository" />
 </a>
 
 <br/><br/>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-activity-graph.vercel.app/graph?username=spencerscott&hide_border=true&bg_color=0d1117&color=fbbf24&line=a78bfa&point=ffffff&area=true&area_color=6d28d9" />
-  <source media="(prefers-color-scheme: light)" srcset="https://github-readme-activity-graph.vercel.app/graph?username=spencerscott&hide_border=true&bg_color=ffffff&color=b45309&line=6d28d9&point=1c1b22&area=true&area_color=a78bfa" />
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=spencerscott&hide_border=true&bg_color=0d1117&color=fbbf24&line=a78bfa&point=ffffff&area=true" width="95%" alt="Contribution activity over the last year" />
-</picture>
-
-<br/><br/>
-
-<img src="https://github-profile-trophy.vercel.app/?username=spencerscott&theme=dracula&no-frame=true&no-bg=true&row=1&column=7&margin-w=10&margin-h=10" alt="GitHub trophies" />
+<img src="https://github-profile-trophy.vercel.app/?username=spencerscott&theme=dracula&no-frame=true&no-bg=true&row=1&column=7&margin-w=10&margin-h=10" alt="GitHub achievement trophies" />
 
 </div>
 
----
+<br/>
 
-## ðŸ Contribution Graph
+<details>
+<summary><b>ðŸ“Œ How to read these numbers</b></summary>
+<br/>
 
-<!--
-  FUNCTIONAL SETUP (this is what makes the snake real, not a dead link):
+| Panel | What it's good for | Where it lies |
+|:--|:--|:--|
+| Profile summary | One-glance scale of total output | Counts contributions, not their difficulty |
+| Volume & rank | Comparative percentile across GitHub | Rewards frequency over impact |
+| Language distribution | Breadth vs actual specialization | Generated files and vendored code inflate it |
+| Commit cadence | Working rhythm, timezone, consistency | Squash merges compress many commits into one |
+| Contribution trend | Recent momentum and focus periods | Private-repo work shows as volume with no context |
 
-  1. Create .github/workflows/snake.yml in THIS repository (spencerscott/spencerscott)
-     using the workflow shipped alongside this README.
-  2. Settings â†’ Actions â†’ General â†’ Workflow permissions â†’ "Read and write permissions".
-  3. Actions tab â†’ "Generate contribution snake" â†’ Run workflow (first run seeds the branch).
-  4. The action commits the SVGs to an orphan `output` branch. The URLs below then resolve.
+Commit graphs measure activity, not value. Read the repositories if you want to know whether the work is any good.
 
-  Nothing else to do. It regenerates every 12 hours from the live contribution grid.
--->
-
-<div align="center">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/spencerscott/spencerscott/output/snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/spencerscott/spencerscott/output/snake.svg" />
-  <img src="https://raw.githubusercontent.com/spencerscott/spencerscott/output/snake.svg" width="100%" alt="A snake eating my GitHub contribution grid" />
-</picture>
-
-<sub>Regenerated every 12 hours by GitHub Actions from the live contribution grid.</sub>
-
-</div>
+</details>
 
 ---
 
@@ -477,7 +517,7 @@ Open to collaboration on mobile, on-device AI, and offline-first products. Best 
 
 **Thanks for stopping by.** â­
 
-<sub>Built with GitHub Actions. Every graph on this page updates itself.</sub>
+<sub>Every metric on this page is generated live. No screenshots, no stale numbers.</sub>
 
 <br/>
 
