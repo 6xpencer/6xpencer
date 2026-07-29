@@ -15,7 +15,7 @@
 
 <br/><br/>
 
-**[About](#about) | [Principles](#principles) | [Stack](#stack) | [Architecture](#architecture) | [Work](#work) | [Performance](#performance) | [Analytics](#analytics) | [Contact](#contact)**
+**[About](#about) | [Principles](#principles) | [Stack](#stack) | [Architecture](#architecture) | [Focus](#focus) | [Work](#work) | [Performance](#performance) | [Analytics](#analytics) | [Contact](#contact)**
 
 </div>
 
@@ -27,6 +27,8 @@ I build software across the full stack: **React** and **TypeScript** on the fron
 
 My focus is on-device intelligence: pushing machine learning to the edge so applications respond instantly, work without connectivity, and keep user data on the device. No round-trips. No privacy tradeoffs. No excuses about signal.
 
+Most applications treat the network as the floor they stand on. I treat it as a bonus. That changes how state is stored, how conflicts resolve, where inference runs, and what happens when the connection disappears. It is harder to build and much better to use.
+
 ```yaml
 identity:
   name: Spencer Scott
@@ -37,6 +39,10 @@ identity:
     - Offline-First Architecture
   building: Ingredient-to-Recipe
   principle: Ship fast. Respect privacy. Sweat the details.
+  currently_learning:
+    - Rust for mobile FFI
+    - WebGPU inference
+    - CRDT internals
 ```
 
 <table>
@@ -74,6 +80,8 @@ Server calls in the hot path. Client state that only makes sense when a request 
 | **Measured, not guessed** | Frame time, cold start, and bundle size tracked in CI. |
 | **Boring where it counts** | Novel in the product, conservative in the plumbing. |
 
+The uncomfortable version: mobile-first means desktop gets fewer features. On-device AI means smaller models and real accuracy tradeoffs. Offline-first means writing conflict resolution nobody thanks you for. Built to last means shipping slower in week one to ship faster in month six. Every principle costs something. These are the costs worth paying.
+
 ---
 
 ## Stack
@@ -107,17 +115,31 @@ Server calls in the hot path. Client state that only makes sense when a request 
 </details>
 
 <details>
-<summary><b>AI, data, testing, and delivery</b></summary>
+<summary><b>AI and on-device intelligence</b></summary>
 <br/>
 
 ![TensorFlow Lite](https://img.shields.io/badge/TensorFlow%20Lite-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 ![ONNX Runtime](https://img.shields.io/badge/ONNX%20Runtime-005CED?style=for-the-badge&logo=onnx&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![Computer Vision](https://img.shields.io/badge/Computer%20Vision-6d28d9?style=for-the-badge)
+![Model Quantization](https://img.shields.io/badge/Model%20Quantization-6d28d9?style=for-the-badge)
+![Offline-First](https://img.shields.io/badge/Offline--First-f59e0b?style=for-the-badge)
+
+Techniques I use: post-training INT8 quantization, quantization-aware training when accuracy drops past tolerance, knowledge distillation, operator fusion, NNAPI and Core ML delegate routing, and a CPU fallback that never crashes.
+
+</details>
+
+<details>
+<summary><b>Data, testing, and delivery</b></summary>
+<br/>
+
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
 </details>
 
@@ -148,6 +170,44 @@ flowchart TB
     style REMOTE fill:#3f3f46,stroke:#a1a1aa,color:#ffffff
 ```
 
+The labels in this diagram intentionally use ASCII only. GitHub's Mermaid renderer can corrupt emoji and Unicode arrows, so none are used here.
+
+| Rule | Reason |
+|:--|:--|
+| Every mutation has a client-generated ID | Retries become safe and deduplication is explicit. |
+| The queue is durable | A killed app resumes instead of losing the write. |
+| Conflicts resolve by policy | Last-write-wins is not acceptable for every field. |
+| The UI never waits on the network | Local optimistic commits keep latency invisible. |
+| Sync is a state machine | Idle, pending, syncing, degraded, and failed render differently. |
+
+```dart
+Future<void> save(Recipe recipe) async {
+  final operation = Mutation.upsert(
+    entity: recipe,
+    clientId: const Uuid().v4(),
+    at: clock.now(),
+  );
+
+  await database.transaction(() async {
+    await database.recipes.upsert(recipe);
+    await queue.enqueue(operation);
+  });
+
+  sync.nudge();
+}
+```
+
+---
+
+## Focus
+
+- **On-device machine learning:** quantized vision models on mid-range hardware, not just flagships
+- **Offline-first Flutter:** local persistence and sync that survives a dead connection and a killed process
+- **Performance engineering:** frame budgets, cold-start times, and memory profiles treated as first-class requirements
+- **Model compression:** distillation and pruning under a 15 MB bundle ceiling
+- **Rust FFI for mobile:** moving only the hottest preprocessing loops out of Dart
+- **Privacy-preserving products:** useful software that does not require collecting everything
+
 ---
 
 ## Work
@@ -156,24 +216,43 @@ flowchart TB
 
 An offline-first Flutter application that identifies ingredients from a single photo and generates recipe suggestions entirely on-device. No server, no account, no connection required.
 
+```mermaid
+flowchart LR
+    CAPTURE["Capture photo"] --> PREP["Preprocess image"]
+    PREP --> MODEL["Run INT8 vision model"]
+    MODEL --> ITEMS["Create ingredient set"]
+    ITEMS --> RANK["Rank local recipes"]
+    RANK --> RESULT["Show results"]
+
+    style CAPTURE fill:#6d28d9,stroke:#a78bfa,color:#ffffff
+    style MODEL fill:#6d28d9,stroke:#a78bfa,color:#ffffff
+    style RANK fill:#b45309,stroke:#fbbf24,color:#ffffff
+    style RESULT fill:#b45309,stroke:#fbbf24,color:#ffffff
+```
+
 | Metric | Target | Why it matters |
 |:--|:--:|:--|
 | Inference latency | `< 400 ms` | Recognition should feel like a camera shutter. |
 | End-to-end result | `< 1 s` | Photo to ranked recipes without a loading state. |
 | Network calls | `0` | No telemetry, latency variance, or request cost. |
-| Model footprint | `~12 MB` | The whole inference pipeline fits in the app bundle. |
+| Model footprint | `~12 MB` | The full inference pipeline fits in the app bundle. |
 
 **What was hard:** the first model was 94 MB and took 2.3 seconds on a mid-range Android device. Getting to 12 MB and 380 ms cost four points of top-1 accuracy, but recipe ranking tolerates a wrong guess better than a two-second wait. Pick the metric the user actually feels.
+
+### Other projects
 
 | Project | Description | Stack |
 |:--|:--|:--|
 | **Sync Engine** | Durable mutation queue with retries, backoff, ordering, and conflict policies. | Dart, SQLite, Drift |
 | **Frame Budget CI** | GitHub Action that fails builds when p99 frame time regresses. | Dart, Actions, Python |
 | **Model Shrink Toolkit** | Distillation, pruning, and INT8 export with accuracy reporting. | Python, PyTorch, ONNX |
+| **Local Search Index** | On-device search over structured content with fast prefix and fuzzy matching. | Dart, SQLite, FTS5 |
 
 ---
 
 ## Performance
+
+Performance stops regressing when it becomes a failing test instead of a good intention.
 
 | Budget | Threshold | Enforced by |
 |:--|:--:|:--|
@@ -182,19 +261,27 @@ An offline-first Flutter application that identifies ingredients from a single p
 | Jank frames per session | `< 0.5%` | Device test harness |
 | Release bundle size | `< 40 MB` | Size diff on every pull request |
 | Peak memory during inference | `< 220 MB` | Profiled device test |
+| Inference result | `< 400 ms` | On-device benchmark suite |
+
+```yaml
+- name: Frame budget
+  run: dart run tool/perf_gate.dart --p99-frame-ms 16 --cold-start-ms 1800
+```
+
+The specific numbers will change as the product changes. The important part is that a number exists, is measured on realistic hardware, and can fail the build.
 
 ---
 
 ## Analytics
 
-The previous analytics section showed broken images because it depended on generated files that had not been published yet. This version uses live, cached Shields endpoints, so the section is useful immediately and does not render empty boxes.
-
-<div align="center">
+The previous version was too short because it removed broken generated SVGs without replacing them with enough real content. This version keeps the full section, but uses stable live endpoints that render immediately.
 
 ### Profile snapshot
 
-<a href="https://github.com/spencerscott?tab=overview"><img src="https://img.shields.io/github/followers/spencerscott?style=for-the-badge&label=followers&color=a78bfa&labelColor=1c1b22" alt="Followers" /></a>
-<a href="https://github.com/spencerscott?tab=repositories"><img src="https://img.shields.io/github/repositories/spencerscott?style=for-the-badge&label=repositories&color=6d28d9&labelColor=1c1b22" alt="Public repositories" /></a>
+<div align="center">
+
+<a href="https://github.com/spencerscott?tab=followers"><img src="https://img.shields.io/github/followers/spencerscott?style=for-the-badge&label=followers&color=a78bfa&labelColor=1c1b22" alt="Followers" /></a>
+<a href="https://github.com/spencerscott?tab=repositories"><img src="https://img.shields.io/github/repositories/spencerscott?style=for-the-badge&label=public%20repositories&color=6d28d9&labelColor=1c1b22" alt="Public repositories" /></a>
 <a href="https://github.com/spencerscott?tab=stars"><img src="https://img.shields.io/github/stars/spencerscott?style=for-the-badge&label=stars&color=fbbf24&labelColor=1c1b22" alt="Stars" /></a>
 <a href="https://github.com/spencerscott"><img src="https://img.shields.io/github/commit-activity/y/spencerscott/spencerscott?style=for-the-badge&label=commits%20this%20year&color=7c3aed&labelColor=1c1b22" alt="Commits this year" /></a>
 
@@ -202,23 +289,58 @@ The previous analytics section showed broken images because it depended on gener
 
 ### Repository health
 
-| Repository | Activity | Last commit | Language | Size |
-|:--|:--|:--|:--|:--|
-| [Ingredient-to-Recipe](https://github.com/spencerscott/ingredient-to-recipe) | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/ingredient-to-recipe?style=flat-square&label=commits&color=6d28d9) | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/ingredient-to-recipe?style=flat-square&label=%20&color=a78bfa) | ![Language](https://img.shields.io/github/languages/top/spencerscott/ingredient-to-recipe?style=flat-square&label=%20&color=b45309) | ![Size](https://img.shields.io/github/repo-size/spencerscott/ingredient-to-recipe?style=flat-square&label=%20&color=fbbf24) |
-| [Sync Engine](https://github.com/spencerscott/sync-engine) | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/sync-engine?style=flat-square&label=commits&color=6d28d9) | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/sync-engine?style=flat-square&label=%20&color=a78bfa) | ![Language](https://img.shields.io/github/languages/top/spencerscott/sync-engine?style=flat-square&label=%20&color=b45309) | ![Size](https://img.shields.io/github/repo-size/spencerscott/sync-engine?style=flat-square&label=%20&color=fbbf24) |
-| [Frame Budget CI](https://github.com/spencerscott/frame-budget-ci) | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/frame-budget-ci?style=flat-square&label=commits&color=6d28d9) | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/frame-budget-ci?style=flat-square&label=%20&color=a78bfa) | ![Language](https://img.shields.io/github/languages/top/spencerscott/frame-budget-ci?style=flat-square&label=%20&color=b45309) | ![Size](https://img.shields.io/github/repo-size/spencerscott/frame-budget-ci?style=flat-square&label=%20&color=fbbf24) |
+These badges are intentionally lightweight. They load from Shields, not a shared GitHub-statistics card service, so the README does not collapse into a wall of rate-limit errors.
+
+| Signal | Live indicator | What it tells you |
+|:--|:--|:--|
+| Audience | ![Followers](https://img.shields.io/github/followers/spencerscott?style=flat-square&label=followers&color=a78bfa) | Whether people choose to follow the work. |
+| Public surface | ![Repositories](https://img.shields.io/github/repositories/spencerscott?style=flat-square&label=repositories&color=6d28d9) | The visible size of the portfolio. |
+| Project interest | ![Stars](https://img.shields.io/github/stars/spencerscott?style=flat-square&label=stars&color=fbbf24) | A rough signal of project interest, not quality. |
+| Yearly activity | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/spencerscott?style=flat-square&label=commits&color=7c3aed) | Recent contribution momentum. |
+| Profile freshness | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/spencerscott?style=flat-square&label=last%20commit&color=6d28d9) | When the profile repository was last updated. |
 
 ### What the numbers mean
 
-| Signal | Useful for | Limitation |
+| Metric | Useful for | Limitation |
 |:--|:--|:--|
 | Followers and stars | Audience and project interest | Not a quality score. |
 | Commit activity | Recent momentum | Squash merges compress many commits. |
-| Top language | Repository identity | It does not show architecture or quality. |
+| Repository count | Portfolio breadth | More repositories do not mean more impact. |
 | Last commit | Maintenance signal | A quiet project may simply be finished. |
-| Repository size | Rough project scale | Assets and generated files can distort it. |
+| Profile views | Discovery | Bots and curiosity can inflate the count. |
 
-No fake green squares, no broken generated SVGs, no shared GitHub token pool. Just live links and numbers that render.
+Commit graphs measure activity, not value. Read the repositories if you want to know whether the work is good.
+
+### Analytics setup that will not break the page
+
+- Keep profile-level badges in the README for always-on metrics.
+- Do not embed generated SVGs until the workflow has successfully published them.
+- Do not point image URLs at another person's `output` branch.
+- Do not rely on shared public card services for the main content of the profile.
+- If you later add a private metrics workflow, keep a text fallback below every generated image.
+
+---
+
+## Writing and notes
+
+| Topic | The short version |
+|:--|:--|
+| Shrinking a vision model | Distillation first, quantization second. |
+| Durable queues in Flutter | An in-memory queue is a hope, not a queue. |
+| Frame budgets in CI | p99 frame time is the performance metric users feel. |
+| Delegate fallbacks | Always plan the CPU path. |
+| Conflict resolution | Decide which fields can merge before production does it for you. |
+| README analytics | Stable live badges beat beautiful broken SVGs. |
+
+---
+
+## Working with me
+
+You need something to feel fast on hardware you do not control. You care about privacy at the architecture level. You want one mobile codebase that does not feel like a compromise. You would rather ship a smaller thing that works everywhere.
+
+I am probably the wrong call when the product is fundamentally a thin client over a large cloud model, when you need native depth on one operating system only, or when the schedule requires skipping measurement work.
+
+**How I like to work:** small pull requests, explicit tradeoffs, performance numbers in the description, and disagreement stated clearly before a decision is made.
 
 ---
 
