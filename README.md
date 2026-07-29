@@ -107,30 +107,17 @@ Server calls in the hot path. Client state that only makes sense when a request 
 </details>
 
 <details>
-<summary><b>AI and on-device intelligence</b></summary>
+<summary><b>AI, data, testing, and delivery</b></summary>
 <br/>
 
 ![TensorFlow Lite](https://img.shields.io/badge/TensorFlow%20Lite-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 ![ONNX Runtime](https://img.shields.io/badge/ONNX%20Runtime-005CED?style=for-the-badge&logo=onnx&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
-![On-Device AI](https://img.shields.io/badge/On--Device%20AI-6d28d9?style=for-the-badge)
-![Computer Vision](https://img.shields.io/badge/Computer%20Vision-6d28d9?style=for-the-badge)
-![Quantization](https://img.shields.io/badge/Model%20Quantization-6d28d9?style=for-the-badge)
-![Offline-First](https://img.shields.io/badge/Offline--First-f59e0b?style=for-the-badge)
-
-</details>
-
-<details>
-<summary><b>Data, testing, and delivery</b></summary>
-<br/>
-
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
 </details>
 
@@ -139,8 +126,6 @@ Server calls in the hot path. Client state that only makes sense when a request 
 ## Architecture
 
 Offline-first is not a cache. The local database is the source of truth, and the server is a peer that syncs when reachable.
-
-**Important: the Mermaid labels below use ASCII only.** No emoji, arrows, middle dots, or special punctuation means no mojibake in GitHub's renderer.
 
 ```mermaid
 flowchart TB
@@ -163,41 +148,6 @@ flowchart TB
     style REMOTE fill:#3f3f46,stroke:#a1a1aa,color:#ffffff
 ```
 
-| Rule | Reason |
-|:--|:--|
-| Every mutation has a client-generated ID | Retries become safe and deduplication is explicit. |
-| The queue is durable | A killed app resumes instead of losing the write. |
-| Conflicts resolve by policy | Last-write-wins is not acceptable for every field. |
-| The UI never waits on the network | Local optimistic commits keep latency invisible. |
-| Sync is a state machine | Idle, pending, syncing, degraded, and failed render differently. |
-
-```dart
-Future<void> save(Recipe recipe) async {
-  final operation = Mutation.upsert(
-    entity: recipe,
-    clientId: const Uuid().v4(),
-    at: clock.now(),
-  );
-
-  await database.transaction(() async {
-    await database.recipes.upsert(recipe);
-    await queue.enqueue(operation);
-  });
-
-  sync.nudge();
-}
-```
-
----
-
-## Current focus
-
-- **On-device machine learning:** quantized vision models on mid-range hardware
-- **Offline-first Flutter:** local persistence and sync that survives a dead connection
-- **Performance engineering:** frame budgets, cold-start times, and memory profiles
-- **Model compression:** distillation and pruning under a 15 MB bundle ceiling
-- **Rust FFI:** moving only the hottest preprocessing loops out of Dart
-
 ---
 
 ## Work
@@ -205,20 +155,6 @@ Future<void> save(Recipe recipe) async {
 ### Ingredient-to-Recipe
 
 An offline-first Flutter application that identifies ingredients from a single photo and generates recipe suggestions entirely on-device. No server, no account, no connection required.
-
-```mermaid
-flowchart LR
-    CAPTURE["Capture photo"] --> PREP["Preprocess image"]
-    PREP --> MODEL["Run INT8 vision model"]
-    MODEL --> ITEMS["Create ingredient set"]
-    ITEMS --> RANK["Rank local recipes"]
-    RANK --> RESULT["Show results"]
-
-    style CAPTURE fill:#6d28d9,stroke:#a78bfa,color:#ffffff
-    style MODEL fill:#6d28d9,stroke:#a78bfa,color:#ffffff
-    style RANK fill:#b45309,stroke:#fbbf24,color:#ffffff
-    style RESULT fill:#b45309,stroke:#fbbf24,color:#ffffff
-```
 
 | Metric | Target | Why it matters |
 |:--|:--:|:--|
@@ -228,8 +164,6 @@ flowchart LR
 | Model footprint | `~12 MB` | The whole inference pipeline fits in the app bundle. |
 
 **What was hard:** the first model was 94 MB and took 2.3 seconds on a mid-range Android device. Getting to 12 MB and 380 ms cost four points of top-1 accuracy, but recipe ranking tolerates a wrong guess better than a two-second wait. Pick the metric the user actually feels.
-
-### Other projects
 
 | Project | Description | Stack |
 |:--|:--|:--|
@@ -249,88 +183,42 @@ flowchart LR
 | Release bundle size | `< 40 MB` | Size diff on every pull request |
 | Peak memory during inference | `< 220 MB` | Profiled device test |
 
-```yaml
-- name: Frame budget
-  run: dart run tool/perf_gate.dart --p99-frame-ms 16 --cold-start-ms 1800
-```
-
 ---
 
 ## Analytics
 
-The old public card services were removed because they were returning rate-limit errors. These panels are generated in this repository with your own token and committed to the `metrics` branch by `.github/workflows/metrics.yml`.
+The previous analytics section showed broken images because it depended on generated files that had not been published yet. This version uses live, cached Shields endpoints, so the section is useful immediately and does not render empty boxes.
 
 <div align="center">
 
-### Overview
-<img src="https://raw.githubusercontent.com/spencerscott/spencerscott/metrics/overview.svg" width="100%" alt="Repository, commit, and contribution totals" />
+### Profile snapshot
 
-<br/><br/>
-
-### Commit Calendar
-<img src="https://raw.githubusercontent.com/spencerscott/spencerscott/metrics/calendar.svg" width="100%" alt="Full-year commit calendar with streak information" />
-
-<br/><br/>
-
-### Language Distribution
-<img src="https://raw.githubusercontent.com/spencerscott/spencerscott/metrics/languages.svg" width="100%" alt="Most-used and recently-used languages" />
-
-<br/><br/>
-
-### Working Rhythm
-<img src="https://raw.githubusercontent.com/spencerscott/spencerscott/metrics/habits.svg" width="100%" alt="Commit habits and productive hours" />
-
-<br/><br/>
-
-### Recent Activity
-<img src="https://raw.githubusercontent.com/spencerscott/spencerscott/metrics/activity.svg" width="100%" alt="Recent pushes, pull requests, reviews, and releases" />
-
-<br/><br/>
-
-### Achievements
-<img src="https://raw.githubusercontent.com/spencerscott/spencerscott/metrics/achievements.svg" width="100%" alt="GitHub achievements" />
+<a href="https://github.com/spencerscott?tab=overview"><img src="https://img.shields.io/github/followers/spencerscott?style=for-the-badge&label=followers&color=a78bfa&labelColor=1c1b22" alt="Followers" /></a>
+<a href="https://github.com/spencerscott?tab=repositories"><img src="https://img.shields.io/github/repositories/spencerscott?style=for-the-badge&label=repositories&color=6d28d9&labelColor=1c1b22" alt="Public repositories" /></a>
+<a href="https://github.com/spencerscott?tab=stars"><img src="https://img.shields.io/github/stars/spencerscott?style=for-the-badge&label=stars&color=fbbf24&labelColor=1c1b22" alt="Stars" /></a>
+<a href="https://github.com/spencerscott"><img src="https://img.shields.io/github/commit-activity/y/spencerscott/spencerscott?style=for-the-badge&label=commits%20this%20year&color=7c3aed&labelColor=1c1b22" alt="Commits this year" /></a>
 
 </div>
 
-<details>
-<summary><b>How to read these numbers</b></summary>
-<br/>
+### Repository health
 
-| Panel | Useful for | Limitation |
+| Repository | Activity | Last commit | Language | Size |
+|:--|:--|:--|:--|:--|
+| [Ingredient-to-Recipe](https://github.com/spencerscott/ingredient-to-recipe) | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/ingredient-to-recipe?style=flat-square&label=commits&color=6d28d9) | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/ingredient-to-recipe?style=flat-square&label=%20&color=a78bfa) | ![Language](https://img.shields.io/github/languages/top/spencerscott/ingredient-to-recipe?style=flat-square&label=%20&color=b45309) | ![Size](https://img.shields.io/github/repo-size/spencerscott/ingredient-to-recipe?style=flat-square&label=%20&color=fbbf24) |
+| [Sync Engine](https://github.com/spencerscott/sync-engine) | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/sync-engine?style=flat-square&label=commits&color=6d28d9) | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/sync-engine?style=flat-square&label=%20&color=a78bfa) | ![Language](https://img.shields.io/github/languages/top/spencerscott/sync-engine?style=flat-square&label=%20&color=b45309) | ![Size](https://img.shields.io/github/repo-size/spencerscott/sync-engine?style=flat-square&label=%20&color=fbbf24) |
+| [Frame Budget CI](https://github.com/spencerscott/frame-budget-ci) | ![Commits](https://img.shields.io/github/commit-activity/y/spencerscott/frame-budget-ci?style=flat-square&label=commits&color=6d28d9) | ![Last commit](https://img.shields.io/github/last-commit/spencerscott/frame-budget-ci?style=flat-square&label=%20&color=a78bfa) | ![Language](https://img.shields.io/github/languages/top/spencerscott/frame-budget-ci?style=flat-square&label=%20&color=b45309) | ![Size](https://img.shields.io/github/repo-size/spencerscott/frame-budget-ci?style=flat-square&label=%20&color=fbbf24) |
+
+### What the numbers mean
+
+| Signal | Useful for | Limitation |
 |:--|:--|:--|
-| Overview | Total output at a glance | Contribution count is not impact. |
-| Commit calendar | Momentum and consistency | Squash merges compress many commits. |
-| Language distribution | Breadth and specialization | Byte counts favor verbose languages. |
-| Working rhythm | Timezone and cadence | It says nothing about quality. |
-| Recent activity | What is being touched now | Private work has limited context. |
-| Achievements | Platform participation | It mostly reflects time on GitHub. |
+| Followers and stars | Audience and project interest | Not a quality score. |
+| Commit activity | Recent momentum | Squash merges compress many commits. |
+| Top language | Repository identity | It does not show architecture or quality. |
+| Last commit | Maintenance signal | A quiet project may simply be finished. |
+| Repository size | Rough project scale | Assets and generated files can distort it. |
 
-Commit graphs measure activity, not value. Read the repositories if you want to know whether the work is good.
-
-</details>
-
----
-
-## Writing and notes
-
-| Topic | The short version |
-|:--|:--|
-| Shrinking a vision model | Distillation first, quantization second. |
-| Durable queues in Flutter | An in-memory queue is a hope, not a queue. |
-| Frame budgets in CI | p99 frame time is the performance metric users feel. |
-| Delegate fallbacks | Always plan the CPU path. |
-| Conflict resolution | Decide which fields can merge before production does it for you. |
-| README analytics | Generate cards in your own repository when shared services fail. |
-
----
-
-## Working with me
-
-You need something to feel fast on hardware you do not control. You care about privacy at the architecture level. You want one mobile codebase that does not feel like a compromise. You would rather ship a smaller thing that works everywhere.
-
-I am probably the wrong call when the product is fundamentally a thin client over a large cloud model, when you need native depth on one operating system only, or when the schedule requires skipping measurement work.
-
-**How I like to work:** small pull requests, explicit tradeoffs, performance numbers in the description, and disagreement stated clearly before a decision is made.
+No fake green squares, no broken generated SVGs, no shared GitHub token pool. Just live links and numbers that render.
 
 ---
 
